@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const users = "./src/db/users.json"; //se escribe como si navegaramos desde app.js porque estamos ejecutando este script desde ahí
 const fs = require('fs');
-const { nextTick } = require('process');
 const usersControllers = require("../../controllers/usersControllers")
 
 //Obtener usuario por id
@@ -15,9 +14,10 @@ router.get("/getall", usersControllers.getAll)
 router.post("/add", usersControllers.addUser)
 
 //actualiza un usuario por id
+router.put("/replace/:id", usersControllers.replaceUser)
 
 //elimina un usuario
-router.delete('/delete', usersControllers.deleteUser)
+router.delete('/delete/:id', usersControllers.deleteUser)
 
 /*router.get('/', (req, res) => {
   console.log(req.params); 

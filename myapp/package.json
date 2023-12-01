@@ -4,7 +4,8 @@
   "description": "primer aplicacion con node",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --watch . ./app.js"
   },
   "keywords": [
     "firstOne"
@@ -12,6 +13,7 @@
   "author": "Armando_Garcia",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "mongoose": "^8.0.2"
   }
 }

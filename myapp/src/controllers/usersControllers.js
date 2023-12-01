@@ -1,8 +1,57 @@
-const users = "./src/db/users.json"; //se escribe como si navegaramos desde app.js porque estamos ejecutando este script desde ahí
-const fs = require('fs');
+const users = "./src/db/users.json" //se escribe como si navegaramos desde app.js porque estamos ejecutando este script desde ahí
+const fs = require('fs')
+const Users = require('../models/users')
 
 module.exports = {
-  getById: async (req, res, next) => {
+  getById: async (req, res, next) => {  
+    try {
+      const { id } = req.params
+      let users = await Users.findById(id)
+      next({status: 200, send:{msg:"usuario encontrado", data: users}})
+    } catch (error){
+    next({status: 404, send: {msg: "Usuario no encontrado", err: error}})
+    }
+  },
+
+  getAll: async (req,res,next) => {
+    try {
+    let users = await Users.find()
+    next({status: 200, send: {msg: "Usuarios encontrados", data: users}})
+    } catch (err) {
+      next({status: 404, send: {msg: "Usuarios no encontrados", err: error}})
+    }
+  },
+
+  addUser: async (req, res, next) => {
+    try {
+      let user = await Users.create(req.body)
+      next ({status: 201, send: {msg: "Usuario creado", data: user}})
+    } catch (error){
+      next({status: 400, send: {msg: "Usuario no creado", err: error}})
+    }   
+  },
+
+  replaceUser: async (req, res, next) => {
+    try{
+      const { id } = req.params
+      let user = await Users.findByIdAndUpdate(id, req.body)
+      next ({status: 201, send: {msg: "Usuario actualizado"}})
+    } catch (error){
+      next({status: 500, send: {msg: "Error al actualizar el usuario", err: err}})
+    } 
+  },
+
+  deleteUser: async (req, res, next) => {
+    try{
+      const { id } = req.params
+      let delUser = await Users.findByIdAndDelete(id)
+      next ({status: 200, send: {msg: "Usuario eliminado", data: delUser}})
+    } catch (error){
+      next({status: 500, send: {msg: "Error al eliminar el usuario"}})
+    } 
+  }
+
+  /*getById: async (req, res, next) => {
     //getbyid debe ser así o en snakecase porque es lo que secribe en la url
     const { id } = req.params; //{ } operador deconstructor
     console.log(id);
@@ -42,7 +91,6 @@ module.exports = {
     })
   },
 
-
     deleteUser: async (req, res, next) => {
         const { id } = req.params; //{ } operador deconstructor
         console.log("id", id);
@@ -50,13 +98,8 @@ module.exports = {
           if (err) next({ status: 400, send: { msg: "No se pudo abrir el archivo", err: err }});
           usersObject = JSON.parse(usersObject);
           console.log(usersObject)
-          let deleteId = parseInt(id)
-          let filteredUsers = usersObject.filter(user => user.id !==deleteId)
-          let updatedUsers = JSON.stringify(filteredUsers)
-          fs.writeFile(users, updatedUsers, 'utf-8', ((err) => {
-            if (err) next({status: 500, send: {msg: "Usuario no eliminado"}});
-            next({status: 201, send: {msg: "Usuario eliminado"}})
-          }))   
-        }); 
-    }
+          /*let deleteId = parseInt(id)
+          console.log(deleteId) 
+        })   
+    }*/  
 }

@@ -1,9 +1,12 @@
 //importar desde users/index.js
+const db = require('./src/helpers/db.js')
 const usersRoutes = require('./src/routes/users/index.js')
-
+const productsRoutes = require('./src/routes/productos/index.js')
 const express = require('express')
 const app = express()
 const port = 3000 //puerto estandar para crear apis
+
+db.connect()
 
 //importar midleware arriba de todas las rutas (para poder usar el body de PUT y POST)
 app.use(express.json()) //este middleware modifica el request para que se pueda leer el JSON
@@ -33,6 +36,7 @@ app.get('/', (req, res) => { //'/'= path   get asigna un recurso
 
 //Asigna el ENDPOINT al módulo, usa la respuesta de users
 app.use('/user', usersRoutes) //el string es el nombre del recurso (de la url)
+app.use('/product', productsRoutes)
 
 app.use((rsp,req,res,next) =>{ //este es next
   res.status(rsp.status).send(rsp.send)
